@@ -1,0 +1,40 @@
+ * {
+    margin: 0;
+    padding: 0;
+}
+body {
+    margin-top: 60px!important;
+}
+div.comment-area {
+    margin-top: 2em;
+}
+h3.comment-title {
+    border-bottom: 1px solid #00B0E8;
+    padding-bottom: 0.4em;
+}
+div.django-ckeditor-widget {
+    width: 100%;
+}
+div.commentinfo {
+   border-bottom: 1px dashed #444;
+    margin-bottom: 0.5em;
+    padding-bottom: 0.5em;
+}
+div.reply {
+    margin-left: 2em;
+}
+div#reply_content_container {
+    border: 1px solid #d1d1d1;
+    background-color: #f8f8f8;
+    border-bottom: none;
+    overflow: hidden;
+    padding: 1em 1em 0.4em;
+}
+div.footer {
+    border-top: 1px solid #88C6E5;
+    overflow: hidden;
+    text-align: center;
+    width: 980px;
+    margin: 10px auto auto;
+    height: 120px;
+}

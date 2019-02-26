@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block title %}
+    我的网站|首页
+{% endblock %}
+
+{% block header_extends %}
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+    <script type="text/javascript" src="{% static 'highcharts.js' %}"></script>
+{% endblock %}
+
+{% block nav_home_active %}
+    active
+{% endblock %}
+
+{% block search %}
+    /novel/search/
+{% endblock %}
+
+{% block content %}
+    <h3 class="home-content"> 欢迎访问我的网站 </h3>
+    <div id="container"></div>
+    <div class="hot-data">
+        <h3>今日热门</h3>
+        <ul>
+            {% for hot_data in today_hot_data %}
+                <li>
+                    <a href="{% url 'novel_detail' hot_data.noverid %}">{{hot_data.novername}}</a>
+                    (阅读量：{{ hot_data.read_num_sum }})
+                </li>
+            {% empty %}
+                <li>今日没有热门</li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="hot-data">
+        <h3>昨日热门</h3>
+        <ul>
+            {% for hot_data in yesterday_hot_data %}
+                <li>
+                    <a href="{% url 'novel_detail' hot_data.noverid %}">{{hot_data.novername}}</a>
+                    (阅读量：{{ hot_data.read_num_sum}})
+                </li>
+            {% empty %}
+                <li>昨日没有热门</li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="hot-data">
+        <h3>七天内热门</h3>
+        <h5>（不包含今日热门）</h5>
+        <ul>
+            {% for hot_data in week_hot_data %}
+                <li>
+                    <a href="{% url 'novel_detail' hot_data.noverid %}">{{ hot_data.novername }}</a>
+                    (阅读量：{{ hot_data.read_num_sum }})
+                </li>
+            {% empty %}
+                <li>七天内没有热门</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <script>
+        var options = {
+            chart: {type: 'line'},
+            title: {
+                text: '近七日阅读量'
+            },
+            xAxis: {
+                categories: {{ dates|safe }},
+                tickmarkPlacement: 'on',
+            },
+            yAxis: {
+                title:{text: null },
+                labels:{ enabled:false },
+                gridLineDashStyle:'Dash'
+            },
+            series: [{
+                name: "小说阅读量",
+                data: {{ read_nums }}
+            }],
+            plotOptions: {
+                line: {
+                    dataLabels: {
+                        enabled: true
+                    }
+                }
+            },
+            legend:{ enabled:false },
+            credits:{ enabled:false }
+        };
+        var chart = Highcharts.chart('container', options);
+    </script>
+
+{% endblock %}
+

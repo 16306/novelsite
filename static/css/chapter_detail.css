@@ -1,0 +1,61 @@
+body {
+    background-color: #e6dfc9;
+    color: #555;
+    font-size: 20px;
+    margin: 0 auto;
+}
+div.bookname {
+    border-bottom: 1px solid #88C6E5;
+    line-height: 30px;
+    padding-top: 10px;
+    margin-bottom: 10px;
+}
+div.bottem1 {
+    clear: both!important;
+    text-align: center;
+    width: auto;
+    margin: auto;
+    padding: 10px;
+}
+div.content_read {
+    overflow: hidden;
+    width: auto;
+    margin: 10px 15% 10px 15%;
+}
+div.box_con {
+    border: 2px solid #88C6E5;
+    overflow: hidden;
+    width: auto;
+    margin: 10px auto;
+}
+p {
+    text-indent: 25px;
+}
+#content {
+    letter-spacing: 0.2em;
+    line-height: 150%;
+    padding: 3% 3% 3% 3%;
+    width: auto;
+    margin: auto;
+}
+div.bottem2 {
+    border-top: 1px solid #88C6E5;
+    clear: both!important;
+    text-align: center;
+    width: auto;
+    margin: auto;
+    padding: 15px;
+}
+div.catalog {
+    clear: both!important;
+    text-align: center;
+    width: auto;
+    margin: 10px;
+}
+a {
+    margin-left: 10px;
+    margin-right: 10px;
+    color: #444;
+    font-size: 15px;
+    text-decoration: none;
+}

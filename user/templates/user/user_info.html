@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block title %}
+    我的网站|用户信息
+{% endblock %}
+
+{% block header_extends %}
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+{% endblock %}
+
+{% block nav_home_active %}
+    active
+{% endblock %}
+
+{% block search %}
+    /novel/search/
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-10 col-xs-offset-1">
+                {% if user.is_authenticated %}
+                    <h2>{{ user.username }}</h2>
+                    <ul>
+                        <li>
+                            昵称：{{ user.get_nikename }}
+                            <a href="{% url 'change_nikename' %}?from={{ request.get_full_path }}">修改昵称</a>
+                        </li>
+                        <li>
+                            邮箱：
+                            {% if user.email %}
+                                {{ user.email }}
+                            {% else %}
+                                未绑定 <a href="{% url 'bind_email' %}?from={{ request.get_full_path }}">绑定邮箱</a>
+                            {% endif %}
+                        </li>
+                        <li>
+                            上一次登录时间：{{ user.last_login|date:"Y-m-d H:i:s" }}
+                        </li>
+                        <li><a href="{% url 'change_password' %}?from={{ request.get_full_path }}">修改密码</a></li>
+                    </ul>
+                {% else %}
+                    <h2 align="center">未登录，跳转到首页. . .</h2>
+                    <script language="javascript" type="text/javascript">
+                        window.location.href="{% url 'home' %}";
+                    </script>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

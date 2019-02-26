@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load comment_tags %}
+
+{% block title %}
+    {{ novel.novername }}
+{% endblock %}
+
+{% block search %}
+    /novel/search/
+{% endblock %}
+
+{% block header_extends %}
+    <script type="text/javascript" src="{% static 'ckeditor/ckeditor-init.js' %}"></script>
+    <script type="text/javascript" src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="novel" style="text-align: center;color: #444;">
+    <h2>
+        <a href="{% url 'novel_detail' novel.pk %}" style="color: #444;">{{novel.novername}}</a>
+    </h2>
+    <p class="info">
+        作&nbsp;&nbsp;&nbsp;&nbsp;者：&nbsp;<a href="{% url 'novel_writer' novel.writername %}" style="color: #444;">{{novel.writername}}</a>
+        &nbsp;&nbsp;&nbsp;&nbsp;阅读次数：&nbsp;{{ novel.get_read_num }}
+    </p>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="hidden-xs col-sm-12 col-md-12 col-lg-12">
+            <div class="comment-area">
+                <h3 class="comment-title">评论提交</h3>
+                {% if user.is_authenticated %}
+                    <form id="comment_form" action="{% url 'update_comment' %}" method="POST" style="overflow: hidden">
+                        <label>{{ user.get_nikename_or_username }}, 欢迎评论~~</label>{% csrf_token %}
+                        <div id="reply_content_container">
+                            <p>回复：</p>
+                            <div id="reply_content"></div>
+                        </div>
+                        {% get_comment_form novel as comment_form %}
+                        {% for field in comment_form %}
+                            {{ field }}
+                        {% endfor %}
+                        <span id="comment_error" class="text-danger pull-left"></span>
+                        <button type="submit" class="btn btn-primary pull-right">
+                                提交评论
+                        </button>
+                    </form>
+                {% else %}
+                    尚未登录，登录后方可评论
+                {% endif %}
+            </div>
+            <div class="comment-area">
+                <h3 class="comment-title">评论列表</h3>
+                <div id="comment_list">
+                    {% get_comment_list novel as comments %}
+                    {% for item in comments %}
+                        <div id="root_{{ item.pk }}" class="commentinfo">
+                            <spen>{{ item.user.get_nikename_or_username }}</spen>
+                            <spen>({{ item.comment_time|date:"Y-m-d H:i:s" }}):</spen>
+                            <div id="comment_{{item.pk}}">{{ item.text|safe }}</div>
+                            <a href="javascript:reply({{ item.pk }});">回复</a>
+                            {% for reply in item.root_comment.all %}
+                                <div class="reply">
+                                    <spen>{{ reply.user.get_nikename_or_username }}</spen>
+                                    <spen>({{ reply.comment_time|date:"Y-m-d H:i:s" }})&nbsp;&nbsp;</spen>
+                                    <spen>回复&nbsp;&nbsp;</spen>
+                                    <spen>{{ reply.reply_to.get_nikename_or_username }}:&nbsp;&nbsp;&nbsp;&nbsp;</spen>
+                                    <div id="comment_{{reply.pk}}">{{ reply.text|safe }}</div>
+                                    <a href="javascript:reply({{ reply.pk }});">回复</a>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% empty %}
+                        <spen id="no_comment">暂无评论</spen>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block script_extends %}
+<script type="text/javascript">
+    function reply(reply_comment_id) {
+        $('#reply_comment_id').val(reply_comment_id);
+        var html = $('#comment_'+ reply_comment_id).html();
+        $('#reply_content').html(html);
+        $('#reply_content_container').show();
+        $('html').animate({scrollTop:$('#comment_form').offset().top - 60}, 300, function(){
+            CKEDITOR.instances['id_text'].focus();
+        });
+    }
+    function monthFormat(num) {
+        return ('00' + num).substr(-2);
+    }
+    function timeFormat(timestamp) {
+        var datetime = new Date(timestamp * 1000);
+        var year = datetime.getFullYear();
+        var month = monthFormat(datetime.getMonth() + 1);
+        var day = monthFormat(datetime.getDate());
+        var hour = monthFormat(datetime.getHours());
+        var minutes = monthFormat(datetime.getMinutes());
+        var seconds = monthFormat(datetime.getSeconds());
+        return year + '-' + month + '-' + day + ' ' + hour + ':' + minutes + ':' + seconds;
+    }
+    $("#comment_form").submit(function () {
+        $("#comment_error").text("");
+        if(CKEDITOR.instances['id_text'].document.getBody().getText().trim()==''){
+            $("#comment_error").text('评论不能为空');
+            return false
+        }
+        CKEDITOR.instances['id_text'].updateElement();
+        $.ajax({
+           url:"{% url 'update_comment' %}",
+            type:'POST',
+            data:$(this).serialize(),
+            cache:false,
+            success:function(data){
+               console.log(data);
+               if(data['status'] == "SUCCESS"){
+                   if($('#reply_comment_id').val()=='0'){
+                        var comment_html = '<div id="root_' + data['pk'] + '" class="commentinfo"><spen>' + data['username'] + '</spen><spen>(' + timeFormat(data['comment_time']) + '):</spen> <div id="comment_'+ data['pk'] + '">' + data['text'] + '</div> <a href="javascript:reply('+ data['pk'] + ');">回复</a></div>'
+                        $("#comment_list").prepend(comment_html);
+                   }else{
+                       var reply_html = '<div class="reply"><spen>' + data['username'] + '</spen> <spen>(' + timeFormat(data['comment_time']) + ')&nbsp;&nbsp;</spen> <spen>回复&nbsp;&nbsp;</spen> <spen>' + data['reply_to'] + ':&nbsp;&nbsp;&nbsp;&nbsp;</spen> <div id="comment_'+ data['pk'] + '">' + data['text'] + '</div> <a href="javascript:reply('+ data['pk'] + ');">回复</a></div>'
+                       $("#root_" + data['root_pk']).append(reply_html);
+                   }
+                   CKEDITOR.instances['id_text'].setData('');
+                   $('#reply_content_container').hide();
+                   $('#reply_comment_id').val('0');
+                   $('#no_comment').remove();
+                   $("#comment_error").text('评论成功');
+               }else{
+                    $("#comment_error").text(data['massage']);
+               }
+            },
+            error:function(xhr){
+               console.log(xhr);
+            }
+        });
+        return false;
+    });
+
+</script>
+{% endblock %}

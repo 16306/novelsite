@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block title %}
+    我的网站|个人收藏
+{% endblock %}
+
+{% block header_extends %}
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+{% endblock %}
+
+{% block nav_home_active %}
+    active
+{% endblock %}
+
+{% block search %}
+    /novel/search/
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-10 col-xs-offset-1">
+                {% if user.is_authenticated %}
+                    <div class="panel panel-default" style="margin-top: 4em;">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">收藏列表</h3>
+                    </div>
+                    <div class="panel-body">
+                        {% for collection in collections %}
+                            <p>{{ collection.info }}：&nbsp;<a href="{{collection.collection}}">{{collection.collection}}</a></p>
+                        {% empty %}
+                            <spen>^_^暂无收藏^_^,<a href="{% url 'novel_list' %}">返回列表</a></spen>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% else %}
+                    <h2 align="center">未登录，跳转到首页. . .</h2>
+                    <script language="javascript" type="text/javascript">
+                        window.location.href="{% url 'home' %}";
+                    </script>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

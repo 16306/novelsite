@@ -1,0 +1,14 @@
+body {
+    margin-top: 60px!important;
+}
+div.novel:not(:last-child) {
+    margin-bottom: 2em;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 1em;
+}
+div.novel h2{
+    margin-top: 0.3em;
+}
+div.paginator {
+    text-align: center;
+}

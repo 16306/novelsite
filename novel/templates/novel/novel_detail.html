@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{# 页面标题 #}
+{% block title %}
+    {{ novel_detail.novername }}
+{% endblock %}
+
+{% block header_extends %}
+    <link rel="stylesheet" href="{% static 'css/novel_detail.css' %}">
+{% endblock %}
+
+{% block search %}
+    search/
+{% endblock %}
+
+{# 页面内容 #}
+{% block content %}
+    <h1 align="center">{{ novel_detail.novername }}</h1>
+    <div class="writerinfo">
+        <a href="{% url 'novel_writer' novel_detail.writername %}">
+                作&nbsp;&nbsp;&nbsp;&nbsp;者：&nbsp;{{ novel_detail.writername }}
+        </a>
+        <a href="{% url 'app_collection' novel_detail.novername %}?from={{ request.get_full_path }}">加入收藏</a>
+    </div>
+    <ul class="chapter-list">
+         {% for i in chapter_list %}
+            <li>
+                <a href="{% url 'chapter_detail' i.chapterid %}">
+                    {{i.chaptername}}
+                </a>
+            </li>
+        {% empty %}
+            <p align="center" style="margin-top: 1em;">
+                暂无章节^_^ ,可移步
+                <a href="http://www.xbiquge.la/fenlei/10_5.html" style="display: inline-block">
+                    笔趣阁
+                </a>
+                查找此小说最新章节
+            </p>
+         {% endfor %}
+
+    </ul>
+    <div class="footer">
+
+    </div>
+{% endblock %}

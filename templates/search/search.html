@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block title %}
+    Search
+{% endblock %}
+
+{% block nav_novel_active %}
+    active
+{% endblock %}
+
+{% block header_extends %}
+    <link rel="stylesheet" href="{% static 'css/novel_list.css' %}">
+{% endblock %}
+
+{% block content %}
+    {% if query %}
+        <div class="hidden-xs col-sm-5 col-md-4 col-lg-3">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    {% if user.is_authenticated %}
+                        <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                        {% if user.has_nikename %}
+                            &nbsp;&nbsp;{{ user.get_nikename }} ，欢迎访问~~
+                        {% else %}
+                            &nbsp;&nbsp;{{ user.username }} ，欢迎访问~~
+                        {% endif %}
+                    {% else %}
+                        <span class="glyphicon glyphicon-user" aria-hidden="true"></span> &nbsp;&nbsp;未登录
+                    {% endif %}
+                </div>
+                <div class="panel-body">
+                    <li ><a href="{% url 'user_info' %}">个人资料</a></li>
+                    {% if user.is_staff or user.is_superuser %}
+                        <li><a href="{% url 'admin:index' %}">后台管理</a></li>
+                    {% endif %}
+                    <li><a href="{% url 'show_collection' %}">个人收藏</a></li>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-7 col-md-8 col-lg-9">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    {% block list_title %}小说列表{% endblock %}
+                </div>
+                <div class="panel-body">
+                    {% for result in page.object_list %}
+                        <div class="novel">
+                            <h3><span class="glyphicon glyphicon-book" aria-hidden="true"></span>
+                                <a href="{% url 'novel_detail' result.object.pk %}">{{result.object.novername}}</a>
+                            </h3>
+                            <p class="info">
+                                作&nbsp;&nbsp;&nbsp;&nbsp;者：&nbsp;<a href="{% url 'novel_writer' result.object.writername %}">{{result.object.writername}}</a>
+                            </p>
+                        </div>
+                    {% empty %}
+                        <div class="novel">
+                            <p>
+                                暂此无小说， 可移步
+                                <a href="http://www.xbiquge.la/fenlei/10_5.html" style="display: inline-block">
+                                    笔趣阁
+                                </a>
+                                查找
+                            </p>
+                        </div>
+                    {% endfor %}
+                    <div class="paginator">
+                        <ul class="pagination">
+                            {% if page.has_previous %}
+                                <li>
+                                    <a href="?q={{ query }}&page={{ page.previous_page_number }}" aria-label="Previous">
+                                        <span aria-hidden="true">上一页</span>
+                                    </a>
+                                </li>
+                            {% else %}
+                                <li><span aria-hidden="true">上一页</span></li>
+                            {% endif %}
+                            {% if page.has_next %}
+                                <li>
+                                    <a href="?q={{ query }}&page={{ page.next_page_number }}" aria-label="Next">
+                                        <span aria-hidden="true">下一页</span>
+                                    </a>
+                                </li>
+                            {% else %}
+                                <li><span aria-hidden="true">下一页</span></li>
+                            {% endif %}
+                        </ul>
+                        <p>
+                            共找到{{ page.paginator.count }}本小说,共{{ page.paginator.num_pages }}页
+                            ,当前第{{ page.number }}页
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <script language="javascript" type="text/javascript">
+            window.location.href="{% url 'home' %}";
+        </script>
+    {% endif %}
+{% endblock %}

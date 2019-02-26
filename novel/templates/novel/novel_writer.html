@@ -1,0 +1,11 @@
+{% extends 'novel_list.html' %}
+
+{# 页面标题 #}
+{% block title %}
+    {{writer_book.writername}}
+{% endblock %}
+
+{% block list_title %}
+    作者：{{page_of_novels.writername}}&nbsp;&nbsp;&nbsp;&nbsp;
+    <a href="{% url 'novel_list' %}">小说列表</a>
+{% endblock %}
