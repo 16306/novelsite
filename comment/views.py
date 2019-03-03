@@ -1,13 +1,12 @@
 from django.shortcuts import render, get_object_or_404
-from django.urls import reverse
 from django.http import JsonResponse
 from .models import Comment
 from .forms import CommentForm
-from novel.models import Nover
+from novel.models import Novel
 
 
 def comment_views(request, novelid):
-    novel = get_object_or_404(Nover, noverid=novelid)
+    novel = get_object_or_404(Novel, novelid=novelid)
     context = {'novel': novel}
     response = render(request, 'comment/comment.html', context)
     return response

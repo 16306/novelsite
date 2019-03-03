@@ -47,7 +47,7 @@
                     {% for result in page.object_list %}
                         <div class="novel">
                             <h3><span class="glyphicon glyphicon-book" aria-hidden="true"></span>
-                                <a href="{% url 'novel_detail' result.object.pk %}">{{result.object.novername}}</a>
+                                <a href="{% url 'novel_detail' result.object.pk %}">{{result.object.novelname}}</a>
                             </h3>
                             <p class="info">
                                 作&nbsp;&nbsp;&nbsp;&nbsp;者：&nbsp;<a href="{% url 'novel_writer' result.object.writername %}">{{result.object.writername}}</a>

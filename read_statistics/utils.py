@@ -3,7 +3,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.utils import timezone
 from django.db.models import Count, Sum
 from .models import ReadNum, ReadNumDetail
-from novel.models import Nover
+from novel.models import Novel
 
 
 def statistics_read_once(request, obj):
@@ -40,9 +40,9 @@ def get_weeks_read_num(content_type):
 
 def today_hot():
     today = timezone.now().date()
-    novels = Nover.objects \
+    novels = Novel.objects \
         .filter(read_detail__date=today) \
-        .values('noverid', 'novername') \
+        .values('novelid', 'novelname') \
         .annotate(read_num_sum=Sum('read_detail__read_num')) \
         .order_by('-read_num_sum')
     return novels[:10]
@@ -50,9 +50,9 @@ def today_hot():
 
 def yesterday_hot():
     yesterday = timezone.now().date() - datetime.timedelta(days=1)
-    novels = Nover.objects \
+    novels = Novel.objects \
         .filter(read_detail__date=yesterday) \
-        .values('noverid', 'novername') \
+        .values('novelid', 'novelname') \
         .annotate(read_num_sum=Sum('read_detail__read_num')) \
         .order_by('-read_num_sum')
     return novels[:10]
@@ -61,9 +61,9 @@ def yesterday_hot():
 def week_hot():
     today = timezone.now().date()
     date = today - datetime.timedelta(days=7)
-    novels = Nover.objects \
+    novels = Novel.objects \
         .filter(read_detail__date__lt=today, read_detail__date__gte=date) \
-        .values('noverid', 'novername') \
+        .values('novelid', 'novelname') \
         .annotate(read_num_sum=Sum('read_detail__read_num')) \
         .order_by('-read_num_sum')
     return novels[:10]

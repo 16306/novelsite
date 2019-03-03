@@ -3,7 +3,7 @@
 
 {# 页面标题 #}
 {% block title %}
-    {{ novel_detail.novername }}
+    {{ novel_detail.novelname }}
 {% endblock %}
 
 {% block header_extends %}
@@ -16,12 +16,12 @@
 
 {# 页面内容 #}
 {% block content %}
-    <h1 align="center">{{ novel_detail.novername }}</h1>
+    <h1 align="center">{{ novel_detail.novelname }}</h1>
     <div class="writerinfo">
         <a href="{% url 'novel_writer' novel_detail.writername %}">
                 作&nbsp;&nbsp;&nbsp;&nbsp;者：&nbsp;{{ novel_detail.writername }}
         </a>
-        <a href="{% url 'app_collection' novel_detail.novername %}?from={{ request.get_full_path }}">加入收藏</a>
+        <a href="{% url 'app_collection' novel_detail.novelname %}?from={{ request.get_full_path }}">加入收藏</a>
     </div>
     <ul class="chapter-list">
          {% for i in chapter_list %}

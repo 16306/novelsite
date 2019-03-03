@@ -2,11 +2,11 @@ from django.shortcuts import render
 from django.contrib.contenttypes.models import ContentType
 from django.core.cache import cache
 from read_statistics.utils import get_weeks_read_num, today_hot, yesterday_hot, week_hot
-from novel.models import Nover
+from novel.models import Novel
 
 
 def home(request):
-    novel_content_type = ContentType.objects.get_for_model(Nover)
+    novel_content_type = ContentType.objects.get_for_model(Novel)
     read_nums, dates = get_weeks_read_num(novel_content_type)
     today_hot_data = today_hot()
     yesterday_hot_data = yesterday_hot()
