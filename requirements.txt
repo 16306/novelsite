@@ -1,4 +1,4 @@
-Django==2.0
+Django==2.2.24
 django-ckeditor==5.4.0  
 django-js-asset==1.2.1  
 pip==19.0.3 
