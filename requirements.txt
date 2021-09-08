@@ -12,7 +12,7 @@ six==1.12.0
 setuptools==40.7.2
 requests==2.21.0
 python-memcached==1.59
-Pillow==5.4.1
+Pillow==8.3.2
 jieba==0.39
 idna==2.8
 django-haystack==2.8.1
