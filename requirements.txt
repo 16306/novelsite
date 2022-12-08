@@ -17,4 +17,4 @@ jieba==0.39
 idna==2.8
 django-haystack==2.8.1
 chardet==3.0.4
-certifi==2018.11.29
+certifi==2022.12.7
