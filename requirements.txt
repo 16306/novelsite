@@ -5,7 +5,7 @@ pip==19.0.3
 PyMySQL==0.9.3  
 pytz==2018.9 
 setuptools==40.7.2 
-wheel==0.32.3 
+wheel==0.38.1 
 Whoosh==2.7.4
 urllib3==1.24.1
 six==1.12.0
